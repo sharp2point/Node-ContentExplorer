@@ -14,12 +14,13 @@
     <div class="folderList"></div>
 
     <script type="module">
+      const ALL_FOLDER_API_PATH = "http://localhost:3000/folder/get";
       const clickGetFolderHandler = async (e) => {
         e.preventDefault();
         e.stopPropagation();
-        let res = await fetch("http://localhost:3000/folder/get")
+        let res = await fetch(ALL_FOLDER_API_PATH)
           .then((res) => res.json())
-          .then((json) => console.log(json))
+          .then((json) => fillFolder(json.data))
           .catch((err) => {
             console.log("ERR", err);
           });
@@ -29,17 +30,15 @@
       getFolderButton.addEventListener("click", clickGetFolderHandler);
 
       const fillFolder = (folders) => {
-        console.log("FOLDERS",folders)
+        console.log("FOLDERS", folders);
         if (folders) {
           const folderList = document.querySelector(".folderList");
-          folders.forEach((folder) => {
-            if (folder) {
-              const folderEl = document.createElement("div");
-              folderEl.classList.add("folder");
-              folderEl.innerHTML = folder;
-              folderList.appendChild(folderEl);
-            }
-          });
+          for (let key in folders) {
+            const folderEl = document.createElement("div");
+            folderEl.classList.add("folder");
+            folderEl.innerHTML = key;
+            folderList.appendChild(folderEl);
+          }
         }
       };
     </script>
