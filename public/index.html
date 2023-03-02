@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="public/styles/main.css" />
+    <title>Commander</title>
+  </head>
+  <body>
+    <div class="menu">
+      <button class="btnFolder">GetFolders</button>
+    </div>
+    <div class="folderList"></div>
+
+    <script type="module">
+      const clickGetFolderHandler = async (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        let res = await fetch("http://localhost:3000/folder/get")
+          .then((res) => res.json())
+          .then((json) => console.log(json))
+          .catch((err) => {
+            console.log("ERR", err);
+          });
+      };
+
+      const getFolderButton = document.querySelector(".btnFolder");
+      getFolderButton.addEventListener("click", clickGetFolderHandler);
+
+      const fillFolder = (folders) => {
+        console.log("FOLDERS",folders)
+        if (folders) {
+          const folderList = document.querySelector(".folderList");
+          folders.forEach((folder) => {
+            if (folder) {
+              const folderEl = document.createElement("div");
+              folderEl.classList.add("folder");
+              folderEl.innerHTML = folder;
+              folderList.appendChild(folderEl);
+            }
+          });
+        }
+      };
+    </script>
+  </body>
+</html>
