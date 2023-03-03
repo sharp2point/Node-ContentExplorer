@@ -11,16 +11,19 @@
     <div class="menu">
       <button class="btnFolder">GetFolders</button>
     </div>
-    <div class="folderList"></div>
+    <div class="diskList"></div>
 
     <script type="module">
+      import { OpDisk } from "./public/src/index.js";
+
+      const imageDiskPath = "./public/assets/hard-disk.png";
       const ALL_FOLDER_API_PATH = "http://localhost:3000/folder/get";
       const clickGetFolderHandler = async (e) => {
         e.preventDefault();
         e.stopPropagation();
         let res = await fetch(ALL_FOLDER_API_PATH)
           .then((res) => res.json())
-          .then((json) => fillFolder(json.data))
+          .then((json) => initDisks(json.data))
           .catch((err) => {
             console.log("ERR", err);
           });
@@ -29,15 +32,13 @@
       const getFolderButton = document.querySelector(".btnFolder");
       getFolderButton.addEventListener("click", clickGetFolderHandler);
 
-      const fillFolder = (folders) => {
-        console.log("FOLDERS", folders);
-        if (folders) {
-          const folderList = document.querySelector(".folderList");
-          for (let key in folders) {
-            const folderEl = document.createElement("div");
-            folderEl.classList.add("folder");
-            folderEl.innerHTML = key;
-            folderList.appendChild(folderEl);
+      const initDisks = (disks) => {
+        if (disks) {
+          const diskList = document.querySelector(".diskList");
+          for (let key in disks) {
+            const disk = new OpDisk(`${key}:/`,imageDiskPath);
+            disk.classList.add("disk");
+            diskList.appendChild(disk);
           }
         }
       };

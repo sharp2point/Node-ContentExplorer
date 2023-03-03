@@ -1,22 +1,31 @@
-:root{
-    margin:0;
-    padding: 0;
-    font-size: 16px;
-    box-sizing: border-box;
+:root {
+  margin: 0;
+  padding: 0;
+  font-size: 16px;
+  box-sizing: border-box;
 }
-.folder{
+/* .folder{
     width:200px;
     height:30px;
     border: 1px solid black;
     border-top-right-radius: 1rem;
     margin:0.25rem;
     padding: 0.25rem;
+} */
+.disk {
+  width:50px;
+  height:50px; 
 }
-.folderList{
-    display:flex;
-    flex-direction: column;
-    justify-content: start;
-    align-items: start;
-    padding:0.5rem;
-    min-height: 200px;
+.disk:hover{
+    box-shadow: 0 0 15px rgba(254, 217, 66, 0.2);
+    transform: scale(1.1);
+}
+.diskList {
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+  align-items: start;
+  padding: 0.5rem;
+  gap:0.5rem;
+  min-height: 200px;
 }
