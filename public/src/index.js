@@ -1,5 +1,6 @@
 import OpDisk from './components/disk/disk.js';
 import OpDiskNavigator from "./components/diskNavigator/diskNavigator.js";
 import OpFolder from "./components/folder/folder.js";
+import OpFile from "./components/file/file.js";
 
-export {OpDisk, OpDiskNavigator, OpFolder}
+export {OpDisk, OpDiskNavigator, OpFolder, OpFile}

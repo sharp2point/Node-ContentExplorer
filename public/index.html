@@ -13,49 +13,82 @@
     </div>
     <op-disk-navigator></op-disk-navigator>
     <div class="folderList"></div>
-
+    <div class="fileList"></div>
     <script type="module">
       import DB from "./public/src/db.js";
-      import { OpDisk, OpDiskNavigator, OpFolder } from "./public/src/index.js";
+      import {
+        OpDisk,
+        OpDiskNavigator,
+        OpFolder,
+        OpFile,
+      } from "./public/src/index.js";
 
       const imageDiskPath = "./public/assets/hard-disk.png";
       const imageFolderPath = "./public/assets/folder.png";
-      const ALL_FOLDER_API_PATH = "http://localhost:3000/folder/get";
+      const imageFilePath = "./public/assets/file.png";
+      const ROOT_FOLDER_API_PATH = "http://localhost:3000/folder/get";
 
-      const clickGetFolderHandler = async (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        let res = await fetch(ALL_FOLDER_API_PATH)
+      const getServerData = async (path) => {
+        return await fetch(path)
           .then((res) => res.json())
-          .then((json) => {
-            DB.setData(json.data);
-            initDisks(json.data);
-          })
           .catch((err) => {
             console.log("ERR", err);
           });
+      };
+
+      const clickGetFolderHandler = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        getServerData(ROOT_FOLDER_API_PATH).then((json) => {
+          console.log("DATA", json.data);
+          DB.setData(json.data);
+          initDisks(json.data);
+        });
       };
 
       const getFolderButton = document.querySelector(".btnFolder");
       getFolderButton.addEventListener("click", clickGetFolderHandler);
 
       const clickDiskHandler = (data) => {
-        console.log("Click Be !", data);
-        initFolder(data);
+        initFolders(data);
       };
 
-      const initFolder = (disk) => {
-        const folderList = document.querySelector(".folderList");
-        folderList.innerHTML = "";
-        const folders = DB.getDataDisk(disk[0]);
-        folders.forEach((folder) => {
-          if (folder) {
-            const opfolder = new OpFolder(folder, imageFolderPath);
-            opfolder.classList.add(".folder");
-            folderList.appendChild(opfolder);
-          }
+      const clickFolderHandler = (data) => {
+        const path = encodeURI(
+          [ROOT_FOLDER_API_PATH, `?path=${data}`].join("/")
+        );
+        getServerData(path).then((json) => {
+          console.log(json);
         });
       };
+
+      const clickFileHandler = (data) => {
+        console.log("FILE", data);
+      };
+
+      const initFolders = (disk) => {
+        const rootPath = disk[0];
+        const folderList = document.querySelector(".folderList");
+        folderList.innerHTML = "";
+        const data = DB.getDataDisk(rootPath);
+
+        /*------> APPEND DOM FOLDERS ------*/
+        data.dirs.forEach((dir) => {
+          const folder = new OpFolder(rootPath, dir.name, imageFolderPath);
+          folder.addSubscriber(this, clickFolderHandler);
+          folder.classList.add(".folder");
+          folderList.appendChild(folder);
+        });
+
+        /*------> APPEND DOM FILES ------*/
+        data.files.forEach((file) => {
+          const opfile = new OpFile(rootPath, file.name, imageFilePath);
+          opfile.addSubscriber(this, clickFolderHandler);
+          opfile.classList.add(".file");
+          folderList.appendChild(opfile);
+        });
+      };
+
       const initDisks = (disks) => {
         if (disks) {
           const diskNavigator = document.querySelector("op-disk-navigator");

@@ -19,11 +19,14 @@ export const getFolders = (path) => {
       encoding: "utf-8",
       withFileTypes: true,
     });
-    const listdir = dirs.map((dir) => {
-      if (dir.isDirectory()) {
-        return dir.name;
+    const listdir = dirs.reduce((map,item) => {
+      if (item.isDirectory()) {
+        map.dirs.push(item);
+      }else{
+        map.files.push(item);
       }
-    });
+      return map;
+    },{dirs:[],files:[]});
 
     return listdir;
   } catch (err) {}

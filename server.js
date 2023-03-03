@@ -4,7 +4,7 @@ import * as ffView from "@fastify/view";
 import * as path from "node:path";
 import { fileURLToPath } from "url";
 
-import { getFromSystem } from "./utils/folders.js";
+import { getFromSystem, getFolders } from "./utils/folders.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -17,9 +17,14 @@ FF.register(ffStatic, {
 FF.get("/", (req, rep) => {
   rep.sendFile("index.html");
 });
+
 FF.get("/folder/get", (req, rep) => {
-    const data = getFromSystem();
-    console.log(data)
+  const data = getFromSystem();
+  rep.send({ data: data });
+});
+
+FF.get("/folder/get/:folder", (req, rep) => {
+  const data = getFromSystem();
   rep.send({ data: data });
 });
 
