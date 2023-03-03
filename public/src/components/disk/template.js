@@ -22,7 +22,13 @@ export default {
               cursor: pointer;
               transition: all 0.3s ease-in;
               box-shadow: 0 0 10px rgba(100,100,100,0.2);
+              width: 50px;
+              height:50px;
               --countur-color: white;
+            }
+            :hover{
+              box-shadow: 0 0 15px rgba(254, 217, 66, 0.2);
+              transform: scale(1.1);
             }
             .disk-header{
                 font-size: 1.5rem;

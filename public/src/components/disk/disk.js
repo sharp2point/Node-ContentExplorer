@@ -7,6 +7,19 @@ export default class Disk extends HTMLElement{
         this.DOM = template.mapDOM(this.root);
         this.DOM.diskHeader.innerHTML = label;
         this.style.background = `center / cover no-repeat url(${imagePath})`;
+
+        this.label = label;
+        this.clickSubscriber = []
+
+        this.addEventListener('click',(e)=>{
+            e.stopPropagation();
+            this.clickSubscriber.forEach(subs=>{
+                subs.fn.call(subs.ctx,this.label);
+            })
+        })
+    }
+    addSubscriber(ctx, fn){
+        this.clickSubscriber.push({ctx,fn});
     }
 }
 if(!customElements.get("op-disk")){

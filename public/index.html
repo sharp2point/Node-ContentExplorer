@@ -11,13 +11,14 @@
     <div class="menu">
       <button class="btnFolder">GetFolders</button>
     </div>
-    <div class="diskList"></div>
+    <op-disk-navigator></op-disk-navigator>
 
     <script type="module">
-      import { OpDisk } from "./public/src/index.js";
+      import { OpDisk ,OpDiskNavigator} from "./public/src/index.js";
 
       const imageDiskPath = "./public/assets/hard-disk.png";
       const ALL_FOLDER_API_PATH = "http://localhost:3000/folder/get";
+
       const clickGetFolderHandler = async (e) => {
         e.preventDefault();
         e.stopPropagation();
@@ -32,13 +33,18 @@
       const getFolderButton = document.querySelector(".btnFolder");
       getFolderButton.addEventListener("click", clickGetFolderHandler);
 
+      const clickDiskHandler = (data)=>{
+        console.log("Click Be !", data)
+      }
+
       const initDisks = (disks) => {
         if (disks) {
-          const diskList = document.querySelector(".diskList");
+          const diskNavigator = document.querySelector("op-disk-navigator");
+          diskNavigator.clear();
           for (let key in disks) {
             const disk = new OpDisk(`${key}:/`,imageDiskPath);
-            disk.classList.add("disk");
-            diskList.appendChild(disk);
+            disk.addSubscriber(this,clickDiskHandler);
+            diskNavigator.add(disk);
           }
         }
       };
