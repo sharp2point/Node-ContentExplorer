@@ -12,11 +12,14 @@
       <button class="btnFolder">GetFolders</button>
     </div>
     <op-disk-navigator></op-disk-navigator>
+    <div class="folderList"></div>
 
     <script type="module">
-      import { OpDisk ,OpDiskNavigator} from "./public/src/index.js";
+      import DB from "./public/src/db.js";
+      import { OpDisk, OpDiskNavigator, OpFolder } from "./public/src/index.js";
 
       const imageDiskPath = "./public/assets/hard-disk.png";
+      const imageFolderPath = "./public/assets/folder.png";
       const ALL_FOLDER_API_PATH = "http://localhost:3000/folder/get";
 
       const clickGetFolderHandler = async (e) => {
@@ -24,7 +27,10 @@
         e.stopPropagation();
         let res = await fetch(ALL_FOLDER_API_PATH)
           .then((res) => res.json())
-          .then((json) => initDisks(json.data))
+          .then((json) => {
+            DB.setData(json.data);
+            initDisks(json.data);
+          })
           .catch((err) => {
             console.log("ERR", err);
           });
@@ -33,17 +39,30 @@
       const getFolderButton = document.querySelector(".btnFolder");
       getFolderButton.addEventListener("click", clickGetFolderHandler);
 
-      const clickDiskHandler = (data)=>{
-        console.log("Click Be !", data)
-      }
+      const clickDiskHandler = (data) => {
+        console.log("Click Be !", data);
+        initFolder(data);
+      };
 
+      const initFolder = (disk) => {
+        const folderList = document.querySelector(".folderList");
+        folderList.innerHTML = "";
+        const folders = DB.getDataDisk(disk[0]);
+        folders.forEach((folder) => {
+          if (folder) {
+            const opfolder = new OpFolder(folder, imageFolderPath);
+            opfolder.classList.add(".folder");
+            folderList.appendChild(opfolder);
+          }
+        });
+      };
       const initDisks = (disks) => {
         if (disks) {
           const diskNavigator = document.querySelector("op-disk-navigator");
           diskNavigator.clear();
           for (let key in disks) {
-            const disk = new OpDisk(`${key}:/`,imageDiskPath);
-            disk.addSubscriber(this,clickDiskHandler);
+            const disk = new OpDisk(`${key}:/`, imageDiskPath);
+            disk.addSubscriber(this, clickDiskHandler);
             diskNavigator.add(disk);
           }
         }
