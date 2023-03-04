@@ -7,7 +7,7 @@ export const getFromSystem = () => {
   DISK_NAME.forEach((disk) => {
     const folders = getFolders(`${disk}:\\`);
     if (folders) {
-      allFoldersFromSystem[disk]= folders;
+      allFoldersFromSystem[`${disk}:`]= folders;
     }
   });
   return allFoldersFromSystem;
@@ -21,9 +21,9 @@ export const getFolders = (path) => {
     });
     const listdir = dirs.reduce((map,item) => {
       if (item.isDirectory()) {
-        map.dirs.push(item);
+        map.dirs.push(`${item.name}`);
       }else{
-        map.files.push(item);
+        map.files.push(item.name);
       }
       return map;
     },{dirs:[],files:[]});
