@@ -1,9 +1,8 @@
 import * as childProc from "node:child_process";
 
 export const runFile = (path) => {
-  const proc = childProc.spawn("chcp 65001 | start", [path],{
+  const proc = childProc.spawn("start", [`"" "${path}"`], {
     shell: true,
-   // windowsVerbatimArguments: true,
   });
 
   proc.stdout.on("data", (data) => {
