@@ -1,4 +1,5 @@
 import template from "./template.js";
+
 export default class Disk extends HTMLElement{
     constructor(label, imagePath){
         super();

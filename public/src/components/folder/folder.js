@@ -23,7 +23,7 @@ export default class OpFolder extends HTMLElement {
     this.clickSubscribers.push({ ctx, fn });
   }
   getFullPath() {
-    return [this.rootPath, this.name].join(":/");
+    return [this.rootPath, this.name].join("/");
   }
 }
 
