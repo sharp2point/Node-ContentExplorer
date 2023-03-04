@@ -2,8 +2,10 @@ import Fastify from "fastify";
 import * as ffStatic from "@fastify/static";
 import * as ffView from "@fastify/view";
 import * as path from "node:path";
-import { fileURLToPath } from "url";
+import * as os from "node:os";
 
+import { fileURLToPath } from "url";
+import { runFile } from "./utils/runFile.js";
 import { getFromSystem, getFolders } from "./utils/folders.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -24,8 +26,15 @@ FF.get("/folder/get", (req, rep) => {
 });
 
 FF.get("/folder/get/:folder", (req, rep) => {
-  const data = getFromSystem();
-  rep.send({ data: data });
+  const [type, path] = [...req.query.path.split("@")];
+
+  if (type === "folder") {
+    const data = getFolders(path);
+    rep.send({ data: data });
+  } else if (type === "file") {
+    runFile(path)
+    rep.send({ data: "run" });
+  }
 });
 
 FF.listen({ port: 3000, host: "0.0.0.0" }, (err, addr) => {

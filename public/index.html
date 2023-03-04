@@ -40,7 +40,6 @@
         e.preventDefault();
         e.stopPropagation();
         getServerData(ROOT_FOLDER_API_PATH).then((json) => {
-          console.log("DATA", json.data);
           DB.setData(json.data);
           initDisks(json.data);
         });
@@ -55,15 +54,21 @@
 
       const clickFolderHandler = (data) => {
         const path = encodeURI(
-          [ROOT_FOLDER_API_PATH, `?path=${data}`].join("/")
+          [ROOT_FOLDER_API_PATH, `?path=folder@${data}`].join("/")
         );
         getServerData(path).then((json) => {
-          console.log(json);
+          console.log("FOLDER",json);
         });
       };
 
       const clickFileHandler = (data) => {
-        console.log("FILE", data);
+        const path = encodeURI(
+          [ROOT_FOLDER_API_PATH, `?path=file@${data}`].join("/")
+        );
+        getServerData(path).then((json) => {
+          console.log("FILE",json,data);
+          
+        });
       };
 
       const initFolders = (disk) => {
@@ -83,7 +88,7 @@
         /*------> APPEND DOM FILES ------*/
         data.files.forEach((file) => {
           const opfile = new OpFile(rootPath, file.name, imageFilePath);
-          opfile.addSubscriber(this, clickFolderHandler);
+          opfile.addSubscriber(this, clickFileHandler);
           opfile.classList.add(".file");
           folderList.appendChild(opfile);
         });
